@@ -1,6 +1,8 @@
-# Nexo Tareas
+# Teknoba
 
 Prototipo de tareas personales para la Tarea 2 de Programación avanzada en web (UNED 03101).
+
+Identidad visual: verdes y grises con tipografía Trebuchet MS (alternativas locales Verdana y sans-serif). No requiere descargar fuentes externas. El nombre técnico de la solución y la dirección del repositorio se conservan para no romper las rutas de ejecución ni los enlaces existentes.
 
 ## Estado actual
 
