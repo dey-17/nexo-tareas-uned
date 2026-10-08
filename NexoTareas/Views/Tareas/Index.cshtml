@@ -1,0 +1,28 @@
+<section class="intro" aria-labelledby="titulo">
+    <p class="eyebrow">ORGANIZACIÓN PERSONAL</p>
+    <h1 id="titulo">Un espacio para tus pendientes.</h1>
+    <p class="lead">El punto de partida para organizar el trabajo de cada día.</p>
+</section>
+<div class="workspace">
+    <section id="panel-tareas" class="card" aria-labelledby="titulo-lista" data-consulta-url="@Url.Action("Consultar", "Tareas")">
+        @Html.AntiForgeryToken()
+        <div class="card-heading">
+            <div><p class="eyebrow">MI ESPACIO DE TRABAJO</p><h2 id="titulo-lista">Mis tareas</h2></div>
+            <button id="actualizar" type="button" class="button">Actualizar lista <span aria-hidden="true">↻</span></button>
+        </div>
+        <p id="estado-consulta" class="status" role="status" aria-live="polite">Consultando la sesión…</p>
+        <div id="error-consulta" class="error" role="alert" hidden></div>
+        <div id="lista-vacia" class="empty" hidden>
+            <div class="empty-icon" aria-hidden="true">✓</div>
+            <h3>Todavía no hay tareas</h3>
+            <p>La lista de esta sesión está vacía.<br />El registro de nuevos pendientes se incorpora en el siguiente avance.</p>
+        </div>
+    </section>
+    <aside class="side-card" aria-labelledby="titulo-avance">
+        <span class="step">AVANCE 01 / 08</span>
+        <h2 id="titulo-avance">La base está lista.</h2>
+        <p>Esta primera versión conecta la interfaz con una lista temporal en el servidor.</p>
+        <ul><li>Proyecto ASP.NET MVC</li><li>Consulta mediante jQuery y Ajax</li><li>Lista independiente por sesión</li></ul>
+        <div class="next"><span>PRÓXIMO PASO</span><strong>Crear una tarea</strong><p>Título y descripción del pendiente.</p></div>
+    </aside>
+</div>

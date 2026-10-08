@@ -1,0 +1,21 @@
+.vs/
+.vscode/
+**/bin/
+**/obj/
+packages/
+*.user
+*.suo
+*.log
+.env
+.env.*
+# La documentación académica se entrega por separado.
+Documentacion*/
+documentacion*/
+capturas/
+verificacion/
+tmp/
+*.docx
+*.pdf
+*.puml
+*.mmd
+PLAN.md

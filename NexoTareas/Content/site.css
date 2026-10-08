@@ -1,0 +1,47 @@
+:root { --red:#bd2840; --red-dark:#922037; --ink:#272b36; --muted:#666c79; --line:#e5e6ec; --paper:#fff; --bg:#f7f7fa; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 'Segoe UI',Arial,sans-serif; }
+a { color:inherit; }
+button { font:inherit; }
+[hidden] { display:none!important; }
+button:focus-visible,a:focus-visible { outline:3px solid var(--red-dark); outline-offset:4px; }
+.skip-link { position:absolute; top:-100px; left:20px; padding:12px; background:white; z-index:2; }
+.skip-link:focus { top:12px; }
+.topbar { padding:20px max(24px,calc((100% - 1160px)/2)); display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); background:white; gap:20px; }
+.brand { display:flex; gap:12px; align-items:center; text-decoration:none; font-weight:750; font-size:19px; letter-spacing:1.5px; }
+.brand-mark { display:grid; place-items:center; width:42px; height:42px; background:var(--red); color:white; border-radius:12px; font-size:32px; letter-spacing:-2px; line-height:1; padding-bottom:5px; }
+.brand-name { font-weight:400; color:var(--muted); font-size:12px; letter-spacing:2px; margin-left:8px; }
+.version { border:1px solid var(--line); border-radius:30px; padding:6px 12px; font-size:12px; color:var(--muted); }
+main { max-width:1160px; margin:auto; padding:44px 24px 0; }
+.eyebrow { margin:0 0 10px; color:var(--red-dark); font-size:11px; font-weight:700; letter-spacing:1.5px; }
+h1 { font-size:clamp(28px,3.4vw,40px); line-height:1.2; letter-spacing:-1px; margin:0 0 14px; }
+.lead { color:var(--muted); margin:0; }
+.intro { margin-bottom:34px; }
+.workspace { display:grid; grid-template-columns:minmax(0,1fr) 280px; gap:24px; align-items:start; }
+.card { background:var(--paper); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.card-heading { display:flex; justify-content:space-between; align-items:center; padding:26px; gap:20px; }
+.card-heading .eyebrow { font-size:9px; margin-bottom:4px; }
+h2 { font-size:22px; line-height:1.3; margin:0; }
+.button { border:1px solid #e0bbc2; background:#fff5f6; color:var(--red-dark); border-radius:8px; padding:10px 14px; cursor:pointer; font-size:13px; font-weight:600; }
+.button:hover { background:#fce6ea; }
+.button:disabled { opacity:.6; cursor:wait; }
+.button span { margin-left:10px; }
+.status { border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:#fbfbfc; padding:10px 26px; margin:0; font-size:12px; color:var(--muted); }
+.empty { padding:50px 24px 55px; text-align:center; }
+.empty-icon { margin:0 auto 16px; display:grid; place-items:center; width:56px; height:56px; border-radius:16px; color:var(--red); background:#fff0f3; font-size:25px; }
+h3 { margin:0 0 10px; font-size:20px; }
+.empty p { margin:0 auto; max-width:450px; color:var(--muted); font-size:14px; }
+.side-card { padding:26px; border:1px solid #ecdde1; border-radius:16px; background:#fff6f7; }
+.step { display:inline-block; color:var(--red-dark); font-weight:700; font-size:10px; letter-spacing:1.3px; margin-bottom:18px; }
+.side-card h2 { font-size:21px; }
+.side-card p,.side-card li { color:#6d5d64; font-size:13px; }
+.side-card ul { padding-left:18px; margin:20px 0 24px; }
+.side-card li { margin:8px 0; }
+.next { padding-top:20px; border-top:1px solid #ead9de; }
+.next span { display:block; font-size:9px; letter-spacing:1.5px; color:var(--red-dark); font-weight:700; margin-bottom:5px; }
+.next strong { font-size:15px; }
+.next p { margin:5px 0 0; }
+.error,.notice { margin:20px 26px; padding:16px; background:#fff0f1; border:1px solid #dfb1b9; border-radius:8px; color:#8e1830; }
+footer { max-width:1160px; margin:26px auto; padding:0 24px; color:var(--muted); font-size:11px; }
+@media(max-width:850px) { .workspace { grid-template-columns:1fr; } .side-card { max-width:none; } main { padding-top:30px; } }
+@media(max-width:520px) { .topbar { padding:16px; } .version { max-width:125px; text-align:center; font-size:10px; } .brand-name { display:block; margin-left:0; } main { padding:28px 16px 0; } .card-heading { padding:20px; align-items:flex-start; flex-direction:column; gap:16px; } footer { padding:0 16px; } .status { padding:10px 20px; } }
