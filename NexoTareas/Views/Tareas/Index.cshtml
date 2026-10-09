@@ -6,6 +6,19 @@
 <div class="workspace">
     <section id="panel-tareas" class="card" aria-labelledby="titulo-lista" data-consulta-url="@Url.Action("Consultar", "Tareas")">
         @Html.AntiForgeryToken()
+        <form id="crear-tarea" class="task-form" action="@Url.Action("Crear", "Tareas")" method="post" novalidate>
+            <h2>Nueva tarea</h2>
+            <p class="form-help">Ambos campos son obligatorios. La tarea se guardará como pendiente.</p>
+            <label for="titulo-tarea">Título</label>
+            <input id="titulo-tarea" name="titulo" type="text" maxlength="100" required aria-describedby="ayuda-titulo" />
+            <small id="ayuda-titulo">Máximo 100 caracteres.</small>
+            <label for="descripcion-tarea">Descripción</label>
+            <textarea id="descripcion-tarea" name="descripcion" rows="3" maxlength="1000" required aria-describedby="ayuda-descripcion"></textarea>
+            <small id="ayuda-descripcion">Máximo 1000 caracteres.</small>
+            <button id="guardar-tarea" class="button" type="submit">Crear tarea</button>
+            <p id="error-crear" class="form-error" role="alert" hidden></p>
+            <p id="exito-crear" class="form-success" role="status" hidden></p>
+        </form>
         <div class="card-heading">
             <div><p class="eyebrow">MI ESPACIO DE TRABAJO</p><h2 id="titulo-lista">Mis tareas</h2></div>
             <button id="actualizar" type="button" class="button">Actualizar lista <span aria-hidden="true">↻</span></button>
@@ -15,14 +28,15 @@
         <div id="lista-vacia" class="empty" hidden>
             <div class="empty-icon" aria-hidden="true">✓</div>
             <h3>Todavía no hay tareas</h3>
-            <p>La lista de esta sesión está vacía.<br />El registro de nuevos pendientes se incorpora en el siguiente avance.</p>
+            <p>La lista de esta sesión está vacía.<br />Crea tu primer pendiente con el formulario.</p>
         </div>
+        <ul id="tareas-creadas" class="task-list" aria-label="Tareas de esta sesión"></ul>
     </section>
     <aside class="side-card" aria-labelledby="titulo-avance">
-        <span class="step">AVANCE 01 / 08</span>
-        <h2 id="titulo-avance">La base está lista.</h2>
-        <p>Esta primera versión conecta la interfaz con una lista temporal en el servidor.</p>
+        <span class="step">AVANCE 02 / 08</span>
+        <h2 id="titulo-avance">Empieza con una tarea.</h2>
+        <p>Registra un título y una descripción sin salir de esta página.</p>
         <ul><li>Proyecto ASP.NET MVC</li><li>Consulta mediante jQuery y Ajax</li><li>Lista independiente por sesión</li></ul>
-        <div class="next"><span>PRÓXIMO PASO</span><strong>Crear una tarea</strong><p>Título y descripción del pendiente.</p></div>
+        <div class="next"><span>PRÓXIMO PASO</span><strong>Consulta y resumen</strong><p>Mejorar el listado y sus indicadores.</p></div>
     </aside>
 </div>

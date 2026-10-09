@@ -1,5 +1,20 @@
 :root { --accent:#28714f; --accent-dark:#195438; --ink:#25332d; --muted:#59665f; --line:#d6dfd9; --paper:#fff; --bg:#eef1ef; }
 * { box-sizing:border-box; }
+.task-form { padding:26px; border-bottom:1px solid var(--line); }
+.form-help, .task-form small { color:var(--muted); font-size:12px; }
+.task-form label { display:block; margin-top:16px; font-weight:700; }
+.task-form input, .task-form textarea { width:100%; font:inherit; padding:10px 12px; border:1px solid #82998a; border-radius:6px; background:white; color:var(--ink); }
+.task-form textarea { resize:vertical; }
+.task-form small { display:block; }
+.task-form .button { margin-top:20px; }
+.task-form input:focus-visible, .task-form textarea:focus-visible { outline:3px solid var(--accent-dark); outline-offset:2px; }
+.task-form [aria-invalid="true"] { border:2px solid #9c2437; }
+.form-error { color:#8e1830; }
+.form-success { color:var(--accent-dark); }
+.task-list { list-style:none; padding:0 26px; }
+.task-list li { padding:20px 0; border-bottom:1px solid var(--line); overflow-wrap:anywhere; }
+.task-list p { white-space:pre-wrap; margin:8px 0; }
+.task-list small { color:var(--accent-dark); font-weight:700; }
 body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 'Trebuchet MS',Verdana,sans-serif; }
 a { color:inherit; }
 button { font:inherit; }

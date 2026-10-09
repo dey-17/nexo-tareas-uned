@@ -6,9 +6,9 @@ Identidad visual: verdes y grises con tipografía Trebuchet MS (alternativas loc
 
 ## Estado actual
 
-Avance 1 de 8: base ASP.NET MVC sobre .NET Framework, modelo de tarea, lista vacía en Session y página inicial con consulta asíncrona. El botón **Actualizar lista** consulta al servidor con jQuery y Ajax, sin recargar la página.
+Avance 2 de 8: creación de tareas por Ajax y listado básico en Session. Título obligatorio (1–100 caracteres) y descripción obligatoria (1–1000), sin aceptar solo espacios. Se validan en cliente y servidor y se recortan los espacios exteriores. Cada tarea nueva comienza pendiente. Las peticiones requieren token antifalsificación. El formulario conserva su contenido si no se confirma el guardado; conviene consultar antes de reintentar para evitar duplicados por una interrupción de red.
 
-Todavía no están implementados crear, editar, eliminar, completar tareas ni los filtros. Esas funcionalidades se incorporan en los siguientes avances.
+Todavía no están implementados editar, eliminar, completar tareas, filtros ni resumen por estados. Esas funcionalidades se incorporan en los siguientes avances. El listado básico permite verificar el resultado de crear y recargar sin añadir duplicados.
 
 ## Requisitos
 
