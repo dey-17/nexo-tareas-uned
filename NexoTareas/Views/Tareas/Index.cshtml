@@ -3,6 +3,11 @@
     <h1 id="titulo">Un espacio para tus pendientes.</h1>
     <p class="lead">El punto de partida para organizar el trabajo de cada día.</p>
 </section>
+<section id="resumen-tareas" class="task-summary" aria-label="Resumen de tareas" aria-busy="true">
+    <div><span>Total de tareas</span><strong id="total-tareas">—</strong></div>
+    <div><span>Pendientes</span><strong id="total-pendientes">—</strong></div>
+    <div><span>Completadas</span><strong id="total-completadas">—</strong></div>
+</section>
 <div class="workspace">
     <section id="panel-tareas" class="card" aria-labelledby="titulo-lista" data-consulta-url="@Url.Action("Consultar", "Tareas")">
         @Html.AntiForgeryToken()
@@ -20,7 +25,7 @@
             <p id="exito-crear" class="form-success" role="status" hidden></p>
         </form>
         <div class="card-heading">
-            <div><p class="eyebrow">MI ESPACIO DE TRABAJO</p><h2 id="titulo-lista">Mis tareas</h2></div>
+            <div><p class="eyebrow">MÁS RECIENTES PRIMERO</p><h2 id="titulo-lista">Mis tareas</h2></div>
             <button id="actualizar" type="button" class="button">Actualizar lista <span aria-hidden="true">↻</span></button>
         </div>
         <p id="estado-consulta" class="status" role="status" aria-live="polite">Consultando la sesión…</p>
@@ -33,10 +38,10 @@
         <ul id="tareas-creadas" class="task-list" aria-label="Tareas de esta sesión"></ul>
     </section>
     <aside class="side-card" aria-labelledby="titulo-avance">
-        <span class="step">AVANCE 02 / 08</span>
-        <h2 id="titulo-avance">Empieza con una tarea.</h2>
-        <p>Registra un título y una descripción sin salir de esta página.</p>
+        <span class="step">AVANCE 03 / 08</span>
+        <h2 id="titulo-avance">Tus pendientes, a la vista.</h2>
+        <p>Consulta tus tareas y su resumen sin salir de esta página. Los indicadores corresponden a esta sesión.</p>
         <ul><li>Proyecto ASP.NET MVC</li><li>Consulta mediante jQuery y Ajax</li><li>Lista independiente por sesión</li></ul>
-        <div class="next"><span>PRÓXIMO PASO</span><strong>Consulta y resumen</strong><p>Mejorar el listado y sus indicadores.</p></div>
+        <div class="next"><span>PRÓXIMO PASO</span><strong>Cambiar el estado</strong><p>Marcar tareas como completadas o pendientes. Por ahora, todas las nuevas tareas están pendientes.</p></div>
     </aside>
 </div>

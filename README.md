@@ -6,9 +6,11 @@ Identidad visual: verdes y grises con tipografía Trebuchet MS (alternativas loc
 
 ## Estado actual
 
-Avance 2 de 8: creación de tareas por Ajax y listado básico en Session. Título obligatorio (1–100 caracteres) y descripción obligatoria (1–1000), sin aceptar solo espacios. Se validan en cliente y servidor y se recortan los espacios exteriores. Cada tarea nueva comienza pendiente. Las peticiones requieren token antifalsificación. El formulario conserva su contenido si no se confirma el guardado; conviene consultar antes de reintentar para evitar duplicados por una interrupción de red.
+Avance 3 de 8: creación por Ajax, listado con identificadores y estados (más recientes primero), y resumen de total, pendientes y completadas calculado en el servidor. Al cargar se muestran guiones hasta recibir una respuesta válida. Si una actualización falla, se conservan los últimos datos con una advertencia de posible desactualización; no se reemplazan por ceros.
 
-Todavía no están implementados editar, eliminar, completar tareas, filtros ni resumen por estados. Esas funcionalidades se incorporan en los siguientes avances. El listado básico permite verificar el resultado de crear y recargar sin añadir duplicados.
+Título obligatorio (1–100 caracteres) y descripción obligatoria (1–1000), sin aceptar solo espacios. Se validan en cliente y servidor y se recortan los espacios exteriores. Cada tarea nueva comienza pendiente. Las peticiones requieren token antifalsificación. El formulario conserva su contenido si no se confirma el guardado; conviene consultar antes de reintentar para evitar duplicados por una interrupción de red.
+
+Todavía no están implementados editar, eliminar, completar tareas ni filtros. Esas funcionalidades se incorporan en los siguientes avances. El contador de completadas permanece en cero hasta incorporar el cambio de estado en el avance 4. Consultar o recargar no crea tareas adicionales.
 
 ## Requisitos
 

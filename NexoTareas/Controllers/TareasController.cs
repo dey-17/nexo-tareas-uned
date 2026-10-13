@@ -44,7 +44,12 @@ namespace NexoTareas.Controllers
         public JsonResult Consultar()
         {
             var tareas = new AlmacenTareasSesion(Session).ObtenerLista();
-            return Json(new { Ok = true, Total = tareas.Count, Tareas = tareas });
+            var completadas = tareas.Count(t => t.Completada);
+            return Json(new {
+                Ok = true, Total = tareas.Count,
+                Pendientes = tareas.Count - completadas, Completadas = completadas,
+                Tareas = tareas.OrderByDescending(t => t.Id).ToList()
+            });
         }
     }
 }
