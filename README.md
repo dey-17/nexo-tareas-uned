@@ -1,16 +1,16 @@
 # Teknoba
 
-Prototipo de tareas personales para la Tarea 2 de Programación avanzada en web (UNED 03101).
+Aplicación de tareas personales con ASP.NET MVC, .NET Framework, jQuery y Ajax.
 
 Identidad visual: verdes y grises con tipografía Trebuchet MS (alternativas locales Verdana y sans-serif). No requiere descargar fuentes externas. El nombre técnico de la solución y la dirección del repositorio se conservan para no romper las rutas de ejecución ni los enlaces existentes.
 
 ## Estado actual
 
-Avance 3 de 8: creación por Ajax, listado con identificadores y estados (más recientes primero), y resumen de total, pendientes y completadas calculado en el servidor. Al cargar se muestran guiones hasta recibir una respuesta válida. Si una actualización falla, se conservan los últimos datos con una advertencia de posible desactualización; no se reemplazan por ceros.
+Permite crear tareas por Ajax, consultar un listado con identificadores y estados (más recientes primero), y ver un resumen de total, pendientes y completadas calculado en el servidor. Al cargar se muestran guiones hasta recibir una respuesta válida. Si una actualización falla, se conservan los últimos datos con una advertencia de posible desactualización; no se reemplazan por ceros.
 
 Título obligatorio (1–100 caracteres) y descripción obligatoria (1–1000), sin aceptar solo espacios. Se validan en cliente y servidor y se recortan los espacios exteriores. Cada tarea nueva comienza pendiente. Las peticiones requieren token antifalsificación. El formulario conserva su contenido si no se confirma el guardado; conviene consultar antes de reintentar para evitar duplicados por una interrupción de red.
 
-Todavía no están implementados editar, eliminar, completar tareas ni filtros. Esas funcionalidades se incorporan en los siguientes avances. El contador de completadas permanece en cero hasta incorporar el cambio de estado en el avance 4. Consultar o recargar no crea tareas adicionales.
+Todavía no están implementados editar, eliminar, completar tareas ni filtros. El contador de completadas permanece en cero mientras no esté disponible el cambio de estado. Consultar o recargar no crea tareas adicionales.
 
 ## Requisitos
 
@@ -61,5 +61,3 @@ Las tareas se almacenan únicamente en memoria del servidor mediante Session InP
 Las pestañas que comparten la cookie de sesión pueden compartir la lista. Una sesión independiente tiene su propia lista. Session no representa una cuenta de usuario ni autentica a la persona. El prototipo no tiene inicio de sesión, sincronización entre dispositivos ni recuperación de datos. No se deben usar datos confidenciales.
 
 La configuración HTTP está destinada a la demostración local; no constituye una configuración de despliegue público en producción. El repositorio público permite descargar código, no ejecutar la aplicación en GitHub.
-
-El informe académico y sus imágenes se entregan por separado y no forman parte de este repositorio.
