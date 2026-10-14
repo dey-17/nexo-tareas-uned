@@ -12,8 +12,37 @@
                 $('<span>').addClass('task-badge' + (tarea.Completada ? ' is-complete' : '')).text(tarea.Completada ? 'Completada' : 'Pendiente').appendTo(cabecera);
                 $('<h3>').text(tarea.Titulo).appendTo(item);
                 $('<p>').text(tarea.Descripcion).appendTo(item);
+                $('<button>').attr({ type: 'button', 'data-id': tarea.Id, 'data-version': tarea.Version,
+                    'data-completada': String(!tarea.Completada),
+                    'aria-label': (tarea.Completada ? 'Marcar pendiente: ' : 'Completar: ') + tarea.Titulo
+                }).addClass('button cambiar-estado').text(tarea.Completada ? 'Marcar pendiente' : 'Marcar completada').prop('disabled', ocupado || guardando).appendTo(item);
                 item.appendTo(lista);
             });
+        }
+        $('#tareas-creadas').on('click', '.cambiar-estado', function () {
+            if (guardando || ocupado) return;
+            var boton = $(this), id = boton.attr('data-id');
+            guardando = true;
+            $('#error-estado, #exito-estado').prop('hidden', true);
+            $('#actualizar, #guardar-tarea, .cambiar-estado').prop('disabled', true);
+            $('#tareas-creadas').attr('aria-busy', 'true');
+            $.ajax({
+                url: panel.attr('data-estado-url'), method: 'POST', dataType: 'json', timeout: 15000,
+                data: { id: id, completada: boton.attr('data-completada'), version: boton.attr('data-version'),
+                    __RequestVerificationToken: panel.find('input[name="__RequestVerificationToken"]').val() }
+            }).done(function (resultado) {
+                if (!resultado || resultado.Ok !== true) { errorEstado(); return; }
+                $('#exito-estado').text('Estado actualizado para la tarea #' + id + '.').prop('hidden', false);
+                consultar();
+            }).fail(errorEstado).always(function () {
+                guardando = false;
+                $('#tareas-creadas').attr('aria-busy', 'false');
+                $('#actualizar, #guardar-tarea, .cambiar-estado').prop('disabled', ocupado);
+            });
+        });
+        function errorEstado(xhr) {
+            var mensaje = xhr && xhr.responseJSON && xhr.responseJSON.Mensaje;
+            $('#error-estado').text(mensaje || 'No se pudo confirmar el cambio. Actualiza la lista para comprobar el estado antes de reintentar.').prop('hidden', false);
         }
         formulario.on('submit', function (evento) {
             evento.preventDefault();
@@ -31,7 +60,7 @@
             }
             guardando = true;
             formulario.attr('aria-busy', 'true').find('input, textarea, button').prop('disabled', true);
-            $('#actualizar').prop('disabled', true);
+            $('#actualizar, .cambiar-estado').prop('disabled', true);
             $.ajax({
                 url: formulario.attr('action'), method: 'POST', dataType: 'json', timeout: 15000,
                 data: { titulo: titulo, descripcion: descripcion, __RequestVerificationToken: panel.find('input[name="__RequestVerificationToken"]').val() }
@@ -43,7 +72,7 @@
             }).fail(function (xhr) { errorCrear(xhr); }).always(function () {
                 guardando = false;
                 formulario.attr('aria-busy', 'false').find('input, textarea, button').prop('disabled', false);
-                $('#guardar-tarea, #actualizar').prop('disabled', ocupado);
+                $('#guardar-tarea, #actualizar, .cambiar-estado').prop('disabled', ocupado);
             });
         });
         function errorCrear(xhr) {
@@ -54,7 +83,7 @@
             if (ocupado) return;
             ocupado = true;
             panel.attr('aria-busy', 'true');
-            $('#actualizar, #guardar-tarea').prop('disabled', true);
+            $('#actualizar, #guardar-tarea, .cambiar-estado').prop('disabled', true);
             $('#error-consulta, #lista-vacia').prop('hidden', true);
             $('#estado-consulta').text('Consultando la sesión…');
             $('#resumen-tareas').attr('aria-busy', 'true');
@@ -81,7 +110,7 @@
                 ocupado = false;
                 panel.attr('aria-busy', 'false');
                 $('#resumen-tareas').attr('aria-busy', 'false');
-                $('#actualizar, #guardar-tarea').prop('disabled', guardando);
+                $('#actualizar, #guardar-tarea, .cambiar-estado').prop('disabled', guardando);
             });
         }
         function fallo() {

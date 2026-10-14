@@ -9,7 +9,7 @@
     <div><span>Completadas</span><strong id="total-completadas">—</strong></div>
 </section>
 <div class="workspace">
-    <section id="panel-tareas" class="card" aria-labelledby="titulo-lista" data-consulta-url="@Url.Action("Consultar", "Tareas")">
+    <section id="panel-tareas" class="card" aria-labelledby="titulo-lista" data-consulta-url="@Url.Action("Consultar", "Tareas")" data-estado-url="@Url.Action("CambiarEstado", "Tareas")">
         @Html.AntiForgeryToken()
         <form id="crear-tarea" class="task-form" action="@Url.Action("Crear", "Tareas")" method="post" novalidate>
             <h2>Nueva tarea</h2>
@@ -30,6 +30,8 @@
         </div>
         <p id="estado-consulta" class="status" role="status" aria-live="polite">Consultando la sesión…</p>
         <div id="error-consulta" class="error" role="alert" hidden></div>
+        <div id="error-estado" class="error" role="alert" hidden></div>
+        <p id="exito-estado" class="status" role="status" hidden></p>
         <div id="lista-vacia" class="empty" hidden>
             <div class="empty-icon" aria-hidden="true">✓</div>
             <h3>Todavía no hay tareas</h3>

@@ -12,6 +12,31 @@ namespace NexoTareas.Controllers
     {
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public JsonResult CambiarEstado(int? id, bool? completada, int? version)
+        {
+            if (!ModelState.IsValid || !id.HasValue || id.Value <= 0 || !completada.HasValue || !version.HasValue || version.Value <= 0)
+                return ErrorEstado(400, "La solicitud de cambio de estado no es válida.");
+            var tarea = new AlmacenTareasSesion(Session).ObtenerLista().SingleOrDefault(t => t.Id == id.Value);
+            if (tarea == null) return ErrorEstado(404, "La tarea no existe en esta sesión. Actualiza la lista.");
+            if (tarea.Version != version.Value) return ErrorEstado(409, "La tarea cambió desde tu última consulta. Actualiza la lista antes de intentarlo otra vez.");
+            if (tarea.Completada != completada.Value)
+            {
+                var nuevaVersion = checked(tarea.Version + 1);
+                tarea.Completada = completada.Value;
+                tarea.Version = nuevaVersion;
+            }
+            return Json(new { Ok = true, Tarea = tarea });
+        }
+
+        private JsonResult ErrorEstado(int codigo, string mensaje)
+        {
+            Response.StatusCode = codigo;
+            Response.TrySkipIisCustomErrors = true;
+            return Json(new { Ok = false, Mensaje = mensaje });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult Crear(string titulo, string descripcion)
         {
             titulo = (titulo ?? "").Trim();

@@ -10,7 +10,9 @@ Permite crear tareas por Ajax, consultar un listado con identificadores y estado
 
 Título obligatorio (1–100 caracteres) y descripción obligatoria (1–1000), sin aceptar solo espacios. Se validan en cliente y servidor y se recortan los espacios exteriores. Cada tarea nueva comienza pendiente. Las peticiones requieren token antifalsificación. El formulario conserva su contenido si no se confirma el guardado; conviene consultar antes de reintentar para evitar duplicados por una interrupción de red.
 
-Todavía no están implementados editar, eliminar, completar tareas ni filtros. El contador de completadas permanece en cero mientras no esté disponible el cambio de estado. Consultar o recargar no crea tareas adicionales.
+Cada tarea permite marcarse como completada o volver a pendiente sin recargar la página. El servidor valida el identificador, el estado solicitado y la versión de la tarea; rechaza datos inválidos, tareas ajenas a la sesión y cambios basados en una versión antigua. Después de guardar, se consulta de nuevo el listado y el resumen. Si la conexión falla, se debe actualizar la lista para comprobar el resultado antes de reintentar.
+
+Todavía no están implementados editar, eliminar ni filtros. Consultar o recargar no crea tareas adicionales.
 
 ## Requisitos
 
