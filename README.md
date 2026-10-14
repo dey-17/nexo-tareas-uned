@@ -12,7 +12,9 @@ Título obligatorio (1–100 caracteres) y descripción obligatoria (1–1000), 
 
 Cada tarea permite marcarse como completada o volver a pendiente sin recargar la página. El servidor valida el identificador, el estado solicitado y la versión de la tarea; rechaza datos inválidos, tareas ajenas a la sesión y cambios basados en una versión antigua. Después de guardar, se consulta de nuevo el listado y el resumen. Si la conexión falla, se debe actualizar la lista para comprobar el resultado antes de reintentar.
 
-Todavía no están implementados editar, eliminar ni filtros. Consultar o recargar no crea tareas adicionales.
+El botón Editar abre un formulario con el título y la descripción actuales. Guardar cambios valida los mismos límites que la creación y conserva el identificador, la fecha y el estado. Cancelar edición descarta el borrador sin enviar cambios al servidor. Si otra pestaña modificó la tarea, se rechaza el guardado y se conserva el texto para poder revisarlo antes de cancelar y actualizar. Solo se abre una edición a la vez.
+
+Todavía no están implementados eliminar ni filtros. Consultar o recargar no crea tareas adicionales.
 
 ## Requisitos
 

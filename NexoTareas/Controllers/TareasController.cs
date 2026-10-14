@@ -12,6 +12,26 @@ namespace NexoTareas.Controllers
     {
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public JsonResult Editar(int? id, int? version, string titulo, string descripcion)
+        {
+            titulo = (titulo ?? "").Trim();
+            descripcion = (descripcion ?? "").Trim();
+            if (!ModelState.IsValid || !id.HasValue || id.Value <= 0 || !version.HasValue || version.Value <= 0 ||
+                titulo.Length == 0 || titulo.Length > 100 || descripcion.Length == 0 || descripcion.Length > 1000)
+                return ErrorEstado(400, "Revisa el título (1–100 caracteres), la descripción (1–1000) y los datos de la tarea. No se aceptan solo espacios.");
+            var tarea = new AlmacenTareasSesion(Session).ObtenerLista().SingleOrDefault(t => t.Id == id.Value);
+            if (tarea == null) return ErrorEstado(404, "La tarea no existe en esta sesión. Actualiza la lista.");
+            if (tarea.Version != version.Value)
+                return ErrorEstado(409, "La tarea cambió desde que abriste la edición. Conserva tu texto, cancela y actualiza la lista antes de volver a editar.");
+            var nuevaVersion = checked(tarea.Version + 1);
+            tarea.Titulo = titulo;
+            tarea.Descripcion = descripcion;
+            tarea.Version = nuevaVersion;
+            return Json(new { Ok = true, Tarea = tarea });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CambiarEstado(int? id, bool? completada, int? version)
         {
             if (!ModelState.IsValid || !id.HasValue || id.Value <= 0 || !completada.HasValue || !version.HasValue || version.Value <= 0)

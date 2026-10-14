@@ -3,7 +3,9 @@
     $(function () {
         var panel = $('#panel-tareas'), ocupado = false, tieneConsulta = false;
         var guardando = false, formulario = $('#crear-tarea');
+        var tareasActuales = [], edicion = null, editor = $('#editar-tarea');
         function representar(tareas) {
+            tareasActuales = tareas;
             var lista = $('#tareas-creadas').empty();
             tareas.forEach(function (tarea) {
                 var item = $('<li>').addClass('task-item');
@@ -12,12 +14,73 @@
                 $('<span>').addClass('task-badge' + (tarea.Completada ? ' is-complete' : '')).text(tarea.Completada ? 'Completada' : 'Pendiente').appendTo(cabecera);
                 $('<h3>').text(tarea.Titulo).appendTo(item);
                 $('<p>').text(tarea.Descripcion).appendTo(item);
+                $('<button>').attr({ type: 'button', 'data-id': tarea.Id, 'aria-label': 'Editar: ' + tarea.Titulo })
+                    .addClass('button editar').text('Editar').appendTo(item);
                 $('<button>').attr({ type: 'button', 'data-id': tarea.Id, 'data-version': tarea.Version,
                     'data-completada': String(!tarea.Completada),
                     'aria-label': (tarea.Completada ? 'Marcar pendiente: ' : 'Completar: ') + tarea.Titulo
                 }).addClass('button cambiar-estado').text(tarea.Completada ? 'Marcar pendiente' : 'Marcar completada').prop('disabled', ocupado || guardando).appendTo(item);
                 item.appendTo(lista);
             });
+        }
+        $('#tareas-creadas').on('click', '.editar', function () {
+            if (guardando || ocupado) return;
+            if (edicion) { $('#editar-titulo').trigger('focus'); return; }
+            var id = Number($(this).attr('data-id'));
+            var tarea = tareasActuales.find(function (t) { return t.Id === id; });
+            if (!tarea) return;
+            edicion = { id: tarea.Id, version: tarea.Version };
+            $('#titulo-edicion').text('Editar tarea #' + tarea.Id);
+            $('#editar-titulo').val(tarea.Titulo).attr('aria-invalid', 'false');
+            $('#editar-descripcion').val(tarea.Descripcion).attr('aria-invalid', 'false');
+            $('#error-edicion, #exito-edicion').prop('hidden', true);
+            editor.prop('hidden', false);
+            $('#editar-titulo').trigger('focus');
+        });
+        $('#cancelar-edicion').on('click', function () {
+            if (guardando) return;
+            edicion = null;
+            editor[0].reset();
+            editor.prop('hidden', true);
+            $('#exito-edicion').text('Edición cancelada. No se guardaron cambios.').prop('hidden', false);
+            $('#actualizar').trigger('focus');
+        });
+        editor.on('submit', function (evento) {
+            evento.preventDefault();
+            if (!edicion || guardando || ocupado) return;
+            var titulo = $('#editar-titulo').val().trim(), descripcion = $('#editar-descripcion').val().trim();
+            var malTitulo = !titulo || titulo.length > 100, malDescripcion = !descripcion || descripcion.length > 1000;
+            $('#editar-titulo').attr('aria-invalid', String(!!malTitulo));
+            $('#editar-descripcion').attr('aria-invalid', String(!!malDescripcion));
+            $('#error-edicion, #exito-edicion').prop('hidden', true);
+            if (malTitulo || malDescripcion) {
+                $('#error-edicion').text('Escribe un título de 1 a 100 caracteres y una descripción de 1 a 1000. No uses solo espacios.').prop('hidden', false);
+                $(malTitulo ? '#editar-titulo' : '#editar-descripcion').trigger('focus');
+                return;
+            }
+            guardando = true;
+            editor.attr('aria-busy', 'true').find('input, textarea, button').prop('disabled', true);
+            $('#actualizar, #guardar-tarea, .cambiar-estado, .editar').prop('disabled', true);
+            $.ajax({
+                url: editor.attr('action'), method: 'POST', dataType: 'json', timeout: 15000,
+                data: { id: edicion.id, version: edicion.version, titulo: titulo, descripcion: descripcion,
+                    __RequestVerificationToken: panel.find('input[name="__RequestVerificationToken"]').val() }
+            }).done(function (resultado) {
+                if (!resultado || resultado.Ok !== true) { errorEdicion(); return; }
+                edicion = null;
+                editor[0].reset();
+                editor.prop('hidden', true);
+                $('#exito-edicion').text('Cambios guardados correctamente.').prop('hidden', false);
+                consultar();
+            }).fail(errorEdicion).always(function () {
+                guardando = false;
+                editor.attr('aria-busy', 'false').find('input, textarea, button').prop('disabled', false);
+                $('#actualizar, #guardar-tarea, .cambiar-estado, .editar').prop('disabled', ocupado);
+            });
+        });
+        function errorEdicion(xhr) {
+            var mensaje = xhr && xhr.responseJSON && xhr.responseJSON.Mensaje;
+            $('#error-edicion').text(mensaje || 'No se pudo confirmar el guardado. Conservamos el texto. Actualiza la lista para comprobar el resultado antes de reintentar.').prop('hidden', false);
         }
         $('#tareas-creadas').on('click', '.cambiar-estado', function () {
             if (guardando || ocupado) return;
@@ -110,7 +173,7 @@
                 ocupado = false;
                 panel.attr('aria-busy', 'false');
                 $('#resumen-tareas').attr('aria-busy', 'false');
-                $('#actualizar, #guardar-tarea, .cambiar-estado').prop('disabled', guardando);
+                $('#actualizar, #guardar-tarea, .cambiar-estado, .editar').prop('disabled', guardando);
             });
         }
         function fallo() {

@@ -24,6 +24,19 @@
             <p id="error-crear" class="form-error" role="alert" hidden></p>
             <p id="exito-crear" class="form-success" role="status" hidden></p>
         </form>
+        <form id="editar-tarea" class="task-form" action="@Url.Action("Editar", "Tareas")" method="post" novalidate hidden>
+            <h2 id="titulo-edicion">Editar tarea</h2>
+            <p class="form-help">Editar el texto no cambia el estado de la tarea. Ambos campos son obligatorios.</p>
+            <label for="editar-titulo">Título de la tarea</label>
+            <input id="editar-titulo" type="text" maxlength="100" required aria-describedby="limites-edicion" />
+            <label for="editar-descripcion">Descripción de la tarea</label>
+            <textarea id="editar-descripcion" rows="3" maxlength="1000" required aria-describedby="limites-edicion"></textarea>
+            <small id="limites-edicion">Título: máximo 100 caracteres. Descripción: máximo 1000.</small>
+            <button class="button" type="submit">Guardar cambios</button>
+            <button id="cancelar-edicion" class="button" type="button">Cancelar edición</button>
+            <p id="error-edicion" class="form-error" role="alert" hidden></p>
+        </form>
+        <p id="exito-edicion" class="status" role="status" hidden></p>
         <div class="card-heading">
             <div><p class="eyebrow">MÁS RECIENTES PRIMERO</p><h2 id="titulo-lista">Mis tareas</h2></div>
             <button id="actualizar" type="button" class="button">Actualizar lista <span aria-hidden="true">↻</span></button>
