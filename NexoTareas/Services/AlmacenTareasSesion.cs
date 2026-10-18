@@ -26,5 +26,15 @@ namespace NexoTareas.Services
             }
             return lista;
         }
+
+        public int SiguienteId()
+        {
+            const string claveId = "NexoTareas.UltimoId";
+            var ultimo = sesion[claveId] as int? ?? 0;
+            foreach (var tarea in ObtenerLista()) ultimo = Math.Max(ultimo, tarea.Id);
+            var siguiente = checked(ultimo + 1);
+            sesion[claveId] = siguiente;
+            return siguiente;
+        }
     }
 }

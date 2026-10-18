@@ -12,6 +12,20 @@ namespace NexoTareas.Controllers
     {
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public JsonResult Eliminar(int? id, int? version)
+        {
+            if (!ModelState.IsValid || !id.HasValue || id.Value <= 0 || !version.HasValue || version.Value <= 0)
+                return ErrorEstado(400, "La solicitud de eliminación no es válida.");
+            var tareas = new AlmacenTareasSesion(Session).ObtenerLista();
+            var tarea = tareas.SingleOrDefault(t => t.Id == id.Value);
+            if (tarea == null) return ErrorEstado(404, "La tarea no existe en esta sesión. Actualiza la lista.");
+            if (tarea.Version != version.Value) return ErrorEstado(409, "La tarea cambió. Actualiza la lista y revisa su contenido antes de eliminarla.");
+            tareas.Remove(tarea);
+            return Json(new { Ok = true });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult Editar(int? id, int? version, string titulo, string descripcion)
         {
             titulo = (titulo ?? "").Trim();
@@ -69,7 +83,7 @@ namespace NexoTareas.Controllers
             }
             var tareas = new AlmacenTareasSesion(Session).ObtenerLista();
             var tarea = new Tarea {
-                Id = tareas.Count == 0 ? 1 : checked(tareas.Max(t => t.Id) + 1),
+                Id = new AlmacenTareasSesion(Session).SiguienteId(),
                 Titulo = titulo, Descripcion = descripcion,
                 Completada = false, CreadaUtc = DateTime.UtcNow, Version = 1
             };
@@ -86,14 +100,18 @@ namespace NexoTareas.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Consultar()
+        public JsonResult Consultar(string filtro = "todas")
         {
+            if (filtro != "todas" && filtro != "pendientes" && filtro != "completadas")
+                return ErrorEstado(400, "El filtro solicitado no es válido.");
             var tareas = new AlmacenTareasSesion(Session).ObtenerLista();
             var completadas = tareas.Count(t => t.Completada);
+            var visibles = tareas.Where(t => filtro == "todas" || (filtro == "completadas" ? t.Completada : !t.Completada))
+                .OrderByDescending(t => t.Id).ToList();
             return Json(new {
-                Ok = true, Total = tareas.Count,
+                Ok = true, Total = tareas.Count, Filtro = filtro, Visibles = visibles.Count,
                 Pendientes = tareas.Count - completadas, Completadas = completadas,
-                Tareas = tareas.OrderByDescending(t => t.Id).ToList()
+                Tareas = visibles
             });
         }
     }

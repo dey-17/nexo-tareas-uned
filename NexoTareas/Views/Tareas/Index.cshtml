@@ -9,7 +9,7 @@
     <div><span>Completadas</span><strong id="total-completadas">—</strong></div>
 </section>
 <div class="workspace">
-    <section id="panel-tareas" class="card" aria-labelledby="titulo-lista" data-consulta-url="@Url.Action("Consultar", "Tareas")" data-estado-url="@Url.Action("CambiarEstado", "Tareas")">
+    <section id="panel-tareas" class="card" aria-labelledby="titulo-lista" data-consulta-url="@Url.Action("Consultar", "Tareas")" data-estado-url="@Url.Action("CambiarEstado", "Tareas")" data-eliminar-url="@Url.Action("Eliminar", "Tareas")">
         @Html.AntiForgeryToken()
         <form id="crear-tarea" class="task-form" action="@Url.Action("Crear", "Tareas")" method="post" novalidate>
             <h2>Nueva tarea</h2>
@@ -42,13 +42,20 @@
             <button id="actualizar" type="button" class="button">Actualizar lista <span aria-hidden="true">↻</span></button>
         </div>
         <p id="estado-consulta" class="status" role="status" aria-live="polite">Consultando la sesión…</p>
+        <div class="filter-bar">
+            <label for="filtro-tareas">Mostrar tareas</label>
+            <select id="filtro-tareas"><option value="todas">Todas</option><option value="pendientes">Pendientes</option><option value="completadas">Completadas</option></select>
+            <small>El resumen superior incluye todas las tareas de la sesión.</small>
+        </div>
+        <div id="error-eliminar" class="error" role="alert" hidden></div>
+        <p id="exito-eliminar" class="status" role="status" hidden></p>
         <div id="error-consulta" class="error" role="alert" hidden></div>
         <div id="error-estado" class="error" role="alert" hidden></div>
         <p id="exito-estado" class="status" role="status" hidden></p>
         <div id="lista-vacia" class="empty" hidden>
             <div class="empty-icon" aria-hidden="true">✓</div>
-            <h3>Todavía no hay tareas</h3>
-            <p>La lista de esta sesión está vacía.<br />Crea tu primer pendiente con el formulario.</p>
+            <h3 id="titulo-vacio">Todavía no hay tareas</h3>
+            <p id="detalle-vacio">Crea tu primer pendiente con el formulario.</p>
         </div>
         <ul id="tareas-creadas" class="task-list" aria-label="Tareas de esta sesión"></ul>
     </section>

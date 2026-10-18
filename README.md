@@ -14,7 +14,9 @@ Cada tarea permite marcarse como completada o volver a pendiente sin recargar la
 
 El botón Editar abre un formulario con el título y la descripción actuales. Guardar cambios valida los mismos límites que la creación y conserva el identificador, la fecha y el estado. Cancelar edición descarta el borrador sin enviar cambios al servidor. Si otra pestaña modificó la tarea, se rechaza el guardado y se conserva el texto para poder revisarlo antes de cancelar y actualizar. Solo se abre una edición a la vez.
 
-Todavía no están implementados eliminar ni filtros. Consultar o recargar no crea tareas adicionales.
+Eliminar solicita confirmación antes de enviar la petición. Cancelar conserva la tarea. El servidor verifica la sesión y la versión antes de eliminar. Los identificadores no se reutilizan dentro de una sesión, aunque se borre toda la lista.
+
+El selector Mostrar tareas permite consultar todas, pendientes o completadas mediante Ajax. El filtro se conserva al crear, editar, cambiar el estado o eliminar. El resumen superior siempre cuenta todas las tareas; el mensaje del listado indica cuántas cumplen el filtro. Consultar o recargar no crea tareas adicionales. Al recargar la página, el filtro vuelve a Todas.
 
 ## Requisitos
 
@@ -49,7 +51,11 @@ Para restaurar y compilar sin iniciar el servidor:
 
 VS Code sirve como editor y terminal si los requisitos anteriores están instalados. Live Server y `dotnet run` no sustituyen IIS Express en este proyecto clásico de ASP.NET MVC.
 
-## Estructura
+## Pruebas
+
+Con el servidor encendido, ejecutar `./Tests/Integracion.ps1` desde PowerShell. El script usa sesiones independientes, crea datos ficticios, verifica el CRUD, filtros y rechazos, y elimina sus tareas al finalizar correctamente. No usa la sesión del navegador. Puede indicarse otra dirección con `-BaseUrl http://localhost:51842`.
+
+## Organización del código
 
 - `Models/Tarea.cs`: datos de una tarea.
 - `Services/AlmacenTareasSesion.cs`: recuperación de la lista de la sesión actual, sin una lista estática compartida.

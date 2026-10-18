@@ -1,5 +1,11 @@
 :root { --accent:#28714f; --accent-dark:#195438; --ink:#25332d; --muted:#59665f; --line:#d6dfd9; --paper:#fff; --bg:#eef1ef; }
 * { box-sizing:border-box; }
+.filter-bar { padding:16px 26px; display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
+.filter-bar select { font:inherit; padding:8px; border:1px solid var(--line); border-radius:6px; }
+.filter-bar small { flex-basis:100%; color:var(--muted); }
+.filter-bar select:focus-visible { outline:3px solid var(--accent-dark); outline-offset:3px; }
+.task-item > button { margin:6px 8px 0 0; }
+.button.eliminar { background:#fff; color:#8e1830; border-color:#8e1830; }
 .task-summary { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-bottom:24px; }
 .task-summary > div { border:1px solid var(--line); border-top:3px solid var(--accent); background:var(--paper); padding:18px 22px; border-radius:10px; }
 .task-summary span { display:block; color:var(--muted); font-size:13px; }

@@ -4,6 +4,7 @@
         var panel = $('#panel-tareas'), ocupado = false, tieneConsulta = false;
         var guardando = false, formulario = $('#crear-tarea');
         var tareasActuales = [], edicion = null, editor = $('#editar-tarea');
+        var filtroActual = 'todas';
         function representar(tareas) {
             tareasActuales = tareas;
             var lista = $('#tareas-creadas').empty();
@@ -14,6 +15,8 @@
                 $('<span>').addClass('task-badge' + (tarea.Completada ? ' is-complete' : '')).text(tarea.Completada ? 'Completada' : 'Pendiente').appendTo(cabecera);
                 $('<h3>').text(tarea.Titulo).appendTo(item);
                 $('<p>').text(tarea.Descripcion).appendTo(item);
+                $('<button>').attr({ type: 'button', 'data-id': tarea.Id, 'aria-label': 'Eliminar: ' + tarea.Titulo })
+                    .addClass('button eliminar').text('Eliminar').appendTo(item);
                 $('<button>').attr({ type: 'button', 'data-id': tarea.Id, 'aria-label': 'Editar: ' + tarea.Titulo })
                     .addClass('button editar').text('Editar').appendTo(item);
                 $('<button>').attr({ type: 'button', 'data-id': tarea.Id, 'data-version': tarea.Version,
@@ -23,6 +26,40 @@
                 item.appendTo(lista);
             });
         }
+        $('#tareas-creadas').on('click', '.eliminar', function () {
+            if (guardando || ocupado) return;
+            $('#error-eliminar, #exito-eliminar').prop('hidden', true);
+            var id = Number($(this).attr('data-id'));
+            var tarea = tareasActuales.find(function (t) { return t.Id === id; });
+            if (!tarea) return;
+            if (edicion && edicion.id === id) {
+                $('#error-eliminar').text('Guarda o cancela la edición de esta tarea antes de eliminarla.').prop('hidden', false);
+                return;
+            }
+            if (!window.confirm('¿Eliminar la tarea "' + tarea.Titulo + '"? No se puede deshacer.')) return;
+            guardando = true;
+            $.ajax({
+                url: panel.attr('data-eliminar-url'), method: 'POST', dataType: 'json', timeout: 15000,
+                data: { id: tarea.Id, version: tarea.Version, __RequestVerificationToken: panel.find('input[name="__RequestVerificationToken"]').val() }
+            }).done(function (resultado) {
+                if (!resultado || resultado.Ok !== true) { errorEliminar(); return; }
+                $('#exito-eliminar').text('Tarea eliminada correctamente.').prop('hidden', false);
+                consultar();
+            }).fail(errorEliminar).always(function () { guardando = false; sincronizarControles(); });
+            sincronizarControles();
+        });
+        function errorEliminar(xhr) {
+            $('#error-eliminar').text(xhr && xhr.responseJSON && xhr.responseJSON.Mensaje || 'No se pudo confirmar la eliminación. Actualiza la lista antes de reintentar.').prop('hidden', false);
+        }
+        function sincronizarControles() {
+            $('#actualizar, #guardar-tarea, .cambiar-estado, .editar, .eliminar, #filtro-tareas').prop('disabled', ocupado || guardando);
+        }
+        $(document).ajaxSend(sincronizarControles).ajaxComplete(sincronizarControles);
+        $('#filtro-tareas').on('change', function () {
+            if (guardando || ocupado) { $(this).val(filtroActual); return; }
+            filtroActual = $(this).val();
+            consultar();
+        });
         $('#tareas-creadas').on('click', '.editar', function () {
             if (guardando || ocupado) return;
             if (edicion) { $('#editar-titulo').trigger('focus'); return; }
@@ -153,16 +190,19 @@
             $.ajax({
                 url: panel.attr('data-consulta-url'),
                 method: 'POST', dataType: 'json', timeout: 15000,
-                data: { __RequestVerificationToken: panel.find('input[name="__RequestVerificationToken"]').val() }
+                data: { filtro: filtroActual, __RequestVerificationToken: panel.find('input[name="__RequestVerificationToken"]').val() }
             }).done(function (resultado) {
                 if (!resultado || resultado.Ok !== true || !Array.isArray(resultado.Tareas) ||
                     !Number.isInteger(resultado.Total) || !Number.isInteger(resultado.Pendientes) || !Number.isInteger(resultado.Completadas) ||
                     resultado.Pendientes < 0 || resultado.Completadas < 0 ||
-                    resultado.Total !== resultado.Tareas.length || resultado.Total !== resultado.Pendientes + resultado.Completadas) {
+                    resultado.Filtro !== filtroActual || resultado.Visibles !== resultado.Tareas.length ||
+                    resultado.Visibles > resultado.Total || resultado.Total !== resultado.Pendientes + resultado.Completadas) {
                     fallo(); return;
                 }
-                $('#estado-consulta').text('Lista actualizada · ' + resultado.Total + (resultado.Total === 1 ? ' tarea' : ' tareas') + ' en esta sesión.');
-                $('#lista-vacia').prop('hidden', resultado.Total !== 0);
+                $('#estado-consulta').text('Lista actualizada · ' + resultado.Visibles + ' de ' + resultado.Total + ' tareas · ' + filtroActual + '.');
+                $('#lista-vacia').prop('hidden', resultado.Visibles !== 0);
+                $('#titulo-vacio').text(resultado.Total === 0 ? 'Todavía no hay tareas' : 'No hay tareas ' + filtroActual);
+                $('#detalle-vacio').text(resultado.Total === 0 ? 'Crea tu primer pendiente con el formulario.' : 'Selecciona otro filtro para consultar las demás tareas.');
                 representar(resultado.Tareas);
                 $('#total-tareas').text(resultado.Total);
                 $('#total-pendientes').text(resultado.Pendientes);
